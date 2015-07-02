@@ -1,0 +1,107 @@
+function [neuroMatrix,inputClass]=SomBatch(data,height,weight,iter)
+
+%% 导入训练数据，做
+% load simplecluster_dataset;
+% data=simpleclusterInputs;
+% 按长方形排布
+% height=8;
+% weight=8;
+% iter=200;
+
+%% *****************初始化*****************************
+dataNum=size(data,2);
+neuroDim=size(data,1);  
+neuroNum=height*weight;
+% 初始化时 取随机值,区间[a,b], 横轴是属性个数，纵轴是神经元的编号
+b=max(max(data));
+a=min(min(data));
+neuroMatrix=a+(b-a).*rand(neuroDim,neuroNum);
+% neuroMatrix=rand(neuroDim,neuroNum);
+
+% 记录神经元的坐标
+neuroCoordCell=cell(1,neuroNum);
+for i=1:height
+    for j=1:weight
+        neuroCoordCell{(i-1)*weight+j}=[j i];
+    end
+end
+
+% 神经元之间的距离矩阵
+neuroDistMatrix=zeros(neuroNum,neuroNum);
+for i=1:neuroNum
+    for j=1:neuroNum
+        neuroDistMatrix(i,j)=GetNeuroDistance(i,j,neuroCoordCell);
+    end
+end
+
+% quality measure record
+quan_error_collector=zeros(iter,1);
+topo_error_collector=zeros(iter,1);
+
+%% ***********************训练*******************************
+% batch train...
+
+radius_init=floor(max(height,weight)/2);
+radius_decayconst=iter/log(radius_init);
+radius=radius_init;
+
+fprintf('begin batch train...');
+
+% 记录每个input所归属的神经元ID
+inputClass=zeros(dataNum,1);
+     
+for m=1:iter
+    
+    fprintf('iter step %d \n',m);
+    % 为每个input寻找BMU
+    for i=1:dataNum
+        inputData=data(:,i);
+        bestMatchID=GetBestMatch(inputData,neuroMatrix);
+        inputClass(i)=bestMatchID;
+    end
+    
+    % matrix Hcj,i
+    influenceMatrix=exp((-1*neuroDistMatrix.^2)/(2*radius^2));    
+%     disp(InfluenceMatrix);
+    
+    
+    % 更新每个BMU及其邻居
+    for j=1:neuroNum
+%         h=repmat(InfluenceMatrix(inputClass,j),1,dataNum);
+        % 找到在别的BMU的radius内的进行更新
+        bmuIDs=find(neuroDistMatrix(:,j)<=radius);
+        idx=find(ismember(inputClass,bmuIDs));
+        influence=influenceMatrix(inputClass(idx),j);      
+        neuroMatrix(:,j)=data(:,idx)*influence./sum(influence);
+        
+%         influence=InfluenceMatrix(inputClass,j);       
+%         neuroMatrix(:,j)=data*influence./sum(influence);
+
+    end           
+    % update parameters
+    radius_decayrate=exp(-m/radius_decayconst);
+    radius=radius_init*radius_decayrate;
+    
+%     rough_lr=rough_lr*exp(-k1/rough_iter);
+%     [quan_error topo_error ]=GetQualityMeasure(data,neuroMatrix,neuroCoordCell);
+%     quan_error_collector(m)=quan_error;
+%     topo_error_collector(m)=topo_error; 
+    
+end
+
+
+% 记录每个输入点所属的类，找到它的 best match
+figure(1);
+plot(data(1,:),data(2,:),'go');
+hold on ;
+plot(neuroMatrix(1,:),neuroMatrix(2,:),'ro');
+
+figure(2);
+plot((1:iter),quan_error_collector);
+
+figure(3);
+plot((1:iter),topo_error_collector);
+
+
+
+end

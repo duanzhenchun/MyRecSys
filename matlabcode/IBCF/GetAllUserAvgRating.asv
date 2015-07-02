@@ -1,0 +1,5 @@
+function GetAllUserAvgRating(userRatingMatrix)
+% 获得所有用户的平均打分
+% 返回一个向量，按userID从1到最后排列
+
+userCount=size

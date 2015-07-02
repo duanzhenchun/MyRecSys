@@ -1,0 +1,37 @@
+function userSocialTrustCell = GetUserSocialTrustForSocialMF(uniqUserData,socialTrustData)
+
+    userCount=length(uniqUserData);
+    userSocialTrustCell=cell(userCount,1);
+    fprintf('start to get the trust ...');
+    parfor i=1:userCount
+        
+        the20num=round(0.2*userCount);
+        if mod(i,the20num)==0
+            disp ('20%');
+        end
+        
+        tempUser=uniqUserData(i);
+        idx=find(socialTrustData(:,1)==tempUser);
+        
+        if isempty(idx)
+            continue;
+        end
+        
+        trustNeighbour=socialTrustData(idx,2);
+        trustValues=socialTrustData(idx,3);   
+        
+        [~,IA,IB]=intersect(uniqUserData,trustNeighbour);
+        indexList=zeros(length(trustNeighbour),2);
+        indexList(:,1)=IA;
+        indexList(:,2)=IB;
+        %∞¥indexBµƒ…˝–Ú≈≈¡–
+        indexList=sortrows(indexList,2);
+        
+        trustList=zeros(length(idx),2);
+        trustList(:,1)=indexList(:,1);
+        trustList(:,2)=trustValues/length(idx);
+        userSocialTrustCell{i}=trustList;
+    end
+
+
+end

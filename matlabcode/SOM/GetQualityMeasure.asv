@@ -1,0 +1,21 @@
+function quan_error=GetQualityMeasure(data,neuroMatrix)
+%  为SOM的quality measure 画图
+    dataNum=size(data,2);
+    quan_error=0; % quantization error
+    topo_error=0;
+    for i=1:dataNum
+        inputData=data(:,i);
+        bestMatchID=GetBestMatch(inputData,neuroMatrix);
+        bestMatchNeuro=neuroMatrix(:,bestMatchID);
+        quan_error=quan_error+GetDistance(inputData,bestMatchNeuro);
+        % 剔除第1个bestmatch neuro
+        neuroMatrix(:,bestMatchID)=[];
+        temp
+        secondBestMatchID=GetBestMatch(inputData,neuroMatrix);
+        neuroDist=GetNeuroDistance(bestMatchID,secondBestMatchID);
+        if neuroDist~=1  % first BMU 和 second BMU 不邻接
+            topo_error=topo_error+1;
+        end             
+    end
+    quan_error=quan_error/dataNum;
+end

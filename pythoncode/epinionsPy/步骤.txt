@@ -1,0 +1,13 @@
+1.userHandler - > rawCoreUserID
+2.GetRawSoicalData - > rawSocial 
+3.GetConnFinalUser - > coreUserID
+4.GetFinalSocialData -> finalSocial
+5.GetConnGraphByFinalUser -> finalSocial.graph
+6.GetFinalRatingData - > finalRating
+6.GetMultiLevelUser -> userLevel
+7.dataSplitHandler - > train & test  
+
+8.GetTrustList -> trust list 
+     direct  undirect
+
+8. GetTrustListForSocialMF
