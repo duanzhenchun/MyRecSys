@@ -15,5 +15,5 @@ I use matlab to implement several traditional and state of the art recommendatio
 3.SVD  
 4.SocialMF  
 5.CF-ULF / PureTrust / Trust-CF-ULF  (three novel user based CF methods)  
-6.Self organizing maps (SOM) neural networt  
+6.Self organizing maps (SOM) neural network  
 7.my own algorithms    
