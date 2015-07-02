@@ -9,7 +9,7 @@ I use python to handle part of the data processing job,  including:
 part of the code will rely on the extra lib "SNAP", so you should copy the "snap.py"  
 and "_snap.pyd" intofiles such as baiduPy
 
-I use matlab to implement severak traditional and state of the art recommendation methods, including:  
+I use matlab to implement several traditional and state of the art recommendation methods, including:  
 1.User based CF  
 2.Item based CF  
 3.SVD  
