@@ -2,7 +2,7 @@ these are the codes of my project in lab.
 Basing on it, I ran experiments and wrote a paper.
 
 I use python to handle part of the data processing job,  including:  
-1. split the data in training set and testing set    
+1. split the data into training set and testing set    
 2. build the social network basing on the social data and run BFS on it to search friends for each user   
 3. plot results   
 
